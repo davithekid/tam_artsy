@@ -1,80 +1,40 @@
 import {
-  Backpack,
-  CakeSlice,
-  Coffee,
-  Grape,
-  Hotel,
-  IceCream,
-  MapPin,
+  Handbag,
+  Shirt,
+  Sparkles,
   Package,
-  Pizza,
-  Plane,
-  Sandwich,
-  Smile,
+  Users,
 } from "lucide-react";
 
-export const foods = [
+export const products = [
   {
-    title: "Dessert",
-    icon: CakeSlice,
-    description: "Sweet treats to satisfy your cravings.",
+    title: "Bolsas",
+    icon: Handbag,
+    description: "Bolsas artesanais com design único e moderno.",
+    link: "/bolsas",
   },
   {
-    title: "Pizza",
-    icon: Pizza,
-    description: "Delicious, cheesy slices of goodness.",
+    title: "Tops",
+    icon: Shirt,
+    description: "Tops estilosos feitos à mão com conforto e autenticidade.",
+    link: "/tops",
   },
   {
-    title: "Sandwich",
-    icon: Sandwich,
-    description: "Classic and hearty fast food options.",
+    title: "Headpieces",
+    icon: Sparkles,
+    description: "Acessórios que elevam qualquer look.",
+    link: "/headpieces",
   },
   {
-    title: "Coffee",
-    icon: Coffee,
-    description: "Your go-to boost of caffeine.",
-  },
-  {
-    title: "Ice Cream",
-    icon: IceCream,
-    description: "Cold, creamy delights for any mood.",
-  },
-  {
-    title: "Fruit",
-    icon: Grape,
-    description: "Fresh and healthy natural snacks.",
-  },
-];
-
-export const travelMenuItems = [
-  {
-    title: "Destinations",
-    icon: MapPin,
-    description: "Discover amazing places to visit.",
-  },
-  {
-    title: "Hotels",
-    icon: Hotel,
-    description: "Find the best stays for your trips.",
-  },
-  {
-    title: "Flights",
-    icon: Plane,
-    description: "Get deals and tips on air travel.",
-  },
-  {
-    title: "Packing",
+    title: "Variados",
     icon: Package,
-    description: "Essential checklists for stress-free packing.",
+    description: "Peças versáteis para o dia a dia.",
+    link: "/variados",
   },
   {
-    title: "Activities",
-    icon: Smile,
-    description: "Exciting things to do wherever you go.",
-  },
-  {
-    title: "Travel Tips",
-    icon: Backpack,
-    description: "Make every trip smooth and memorable.",
+    title: "Unissex",
+    icon: Users,
+    description: "Modelos neutros e versáteis para todos os estilos.",
+    link: "/unissex",
   },
 ];

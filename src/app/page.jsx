@@ -1,7 +1,7 @@
-import CTA from "@/components/ui/features/cta/cta";
-import Features from "@/components/ui/features/events/features";
-import Hero from "@/components/ui/features/hero";
-import { Industries1 } from "@/components/ui/features/product-types";
+import { CTA } from "@/components/features/cta/cta";
+import Features from "@/components/features/events/features";
+import Hero from "@/components/features/hero";
+import { Industries1 } from "@/components/features/product-types";
 
 export default function Home() {
   return (

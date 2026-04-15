@@ -38,8 +38,8 @@ const Features = () => {
       <div className="w-full max-w-[1100px] px-6 py-10">
 
         {/* Título */}
-        <h2 className="text-pretty text-center font-semibold text-4xl tracking-tight md:text-[2.75rem]">
-          Events by Tam Artsy
+        <h2 className="text-pretty text-center font-bold text-4xl tracking-tight md:text-[2.75rem]">
+          Coleções Tam Artsy
         </h2>
 
         <p className="mt-3 text-center text-lg text-muted-foreground md:text-xl">

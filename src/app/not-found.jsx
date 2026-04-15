@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import Link from 'next/link'
 
-const ErrorPage1 = () => {
+const NotFound = () => {
     const router = useRouter()
     return (
         <div className='mx-auto flex min-h-dvh flex-col items-center justify-center gap-8 p-8 md:gap-12 md:p-16'>
@@ -25,4 +25,4 @@ const ErrorPage1 = () => {
     )
 }
 
-export default ErrorPage1
+export default NotFound
