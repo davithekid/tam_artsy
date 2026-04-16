@@ -22,7 +22,6 @@ const ProductOverview = ({ product }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [carouselApi, setCarouselApi] = useState();
 
-  // 1. PROTEÇÃO: Se o produto não existir, não quebra a página
   if (!product) {
     return (
       <div className="flex h-96 items-center justify-center italic text-muted-foreground">

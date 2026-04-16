@@ -108,7 +108,7 @@ const Industries1 = ({
       name: 'Headpieces',
       description: 'Detalhes que transformam o visual. Headpieces e itens variados.',
       image: '/product-type/headpiece.png',
-      url: '/headpiece',
+      url: '/headpieces',
     },
     {
       name: 'Variados',
