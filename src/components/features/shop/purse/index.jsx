@@ -5,7 +5,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
-import { products } from "@/lib/products";
+import { products } from "@/lib/purges";
 
 const ALL_PRODUCTS = products.filter((p) => p.category === "bolsas");
 const FEATURED = ALL_PRODUCTS.slice(0, 3);

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { products } from "@/lib/products";
+import { products } from "@/lib/purges";
 import ProductOverview from "@/components/features/overview";
 
 export default async function BolsaPage({ params }) {

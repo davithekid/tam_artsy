@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/features/theme/theme-provider";
 import Navbar from "@/components/features/nav/navbar";
 import { Footer } from "@/components/features/footer";
-import GlobalLayout from "@/components/splash-creen/GlobalLayout";
+import GlobalLayout from "@/components/splash-screen/GlobalLayout";
 
 
 const geistSans = Geist({

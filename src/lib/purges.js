@@ -1,122 +1,99 @@
 export const products = [
   {
     id: 1,
-    slug: "bolsa-eclipse-lunar",
+    slug: "bolsa", 
     category: "bolsas",
-
     title: "Bolsa Eclipse Lunar",
     description: "Bolsa artesanal exclusiva com alça dupla regulável.",
-
     images: [
       "/purges/bolsa.jpeg",
     ],
-
     price: {
       regular: 499,
       sale: 399,
       currency: "BRL",
     },
-
     tags: ["duo", "mais-vendida"],
-
     specs: {
       material: "Barbante premium",
       tamanho: "Médio",
       alca: "Regulável",
     },
-
     variants: {
-      color: ["Preto", "Bege"],
+      color: ["Preto"],
     },
   },
   {
     id: 2,
-    slug: "bolsa-baguete",
+    slug: "bolsa-duo", 
     category: "bolsas",
-
-    title: "Bolsa Baguete",
+    title: "Bolsa Duo",
     description: "Bolsa artesanal exclusiva com alça dupla regulável.",
-
     images: [
       "/purges/bolsa-duo.jpeg",
-      "/purges/bolsa-duo-2.jpeg",
+      "/purges/bolsa-duo.jpeg",
     ],
-
     price: {
       regular: 499,
       sale: 399,
       currency: "BRL",
     },
-
     tags: ["duo", "mais-vendida"],
-
     specs: {
       material: "Barbante premium",
       tamanho: "Médio",
       alca: "Regulável",
     },
-
     variants: {
-      color: ["Preto", "Bege"],
+      color: ["Roxo"],
     },
-  }, {
+  },
+  {
     id: 3,
-    slug: "bolsa-praia",
+    slug: "bolsa-praia", 
     category: "bolsas",
-
     title: "Bolsa Praia",
     description: "Bolsa artesanal exclusiva com alça dupla regulável.",
-
     images: [
-      "/purges/bolsa-praia.png",
-      "/purges/bolsa-praia.png",
+      "/purges/bolsa-praia.jpeg",
     ],
-
     price: {
       regular: 499,
       sale: 399,
       currency: "BRL",
     },
-
     tags: ["duo", "mais-vendida"],
-
     specs: {
       material: "Barbante premium",
       tamanho: "Médio",
       alca: "Regulável",
     },
-
     variants: {
-      color: ["Preto", "Bege"],
+      color: ["Bege"],
     },
-  } , {
+  },
+  {
     id: 4,
-    slug: "bolsa-preia",
+    slug: "bolsa-preta", 
     category: "bolsas",
-
-    title: "Bolsa Praia",
+    title: "Bolsa Preta",
     description: "Bolsa artesanal exclusiva com alça dupla regulável.",
-
     images: [
-      "/purges/bolsa-preta.png",
+      "/purges/bolsa-preta.jpeg",
     ],
-
     price: {
       regular: 499,
       sale: 399,
       currency: "BRL",
     },
-
     tags: ["duo", "mais-vendida"],
-
     specs: {
       material: "Barbante premium",
       tamanho: "Médio",
       alca: "Regulável",
     },
-
     variants: {
-      color: ["Preto", "Bege"],
+      color: ["Preto"],
     },
   },
 ];

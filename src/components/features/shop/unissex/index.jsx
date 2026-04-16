@@ -36,15 +36,10 @@ const UnissexShop = ({ className }) => {
   return (
     <section className={cn("py-24 bg-background", className)}>
       <div className="mx-auto max-w-7xl px-6 space-y-24">
-        
-        {/* ── DESTAQUES ── */}
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex flex-col items-center text-center mb-12">
-            <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-primary mb-3">
-              Genderless Collection
-            </span>
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic leading-none">
-              Unissex
+              Destaques
             </h2>
           </div>
 

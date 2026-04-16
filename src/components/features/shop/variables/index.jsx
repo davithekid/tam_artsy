@@ -37,11 +37,8 @@ const VariablesShop = ({ className }) => {
         {activeFilter === "todas" && FEATURED_VARS.length > 0 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="flex flex-col items-center text-center mb-12">
-              <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-primary mb-3">
-                Artsy Essentials
-              </span>
               <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic leading-none">
-                Variables
+                Destaques
               </h2>
             </div>
 
