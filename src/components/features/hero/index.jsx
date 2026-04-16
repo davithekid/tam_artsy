@@ -27,7 +27,7 @@ export default function Hero() {
             <span className="text-muted-foreground/40 italic">usa</span> Tam Artsy.
           </h1>
 
-          <p className="mt-8 max-w-[45ch] text-foreground/70 text-lg md:text-xl leading-relaxed">
+          <p className="hidden md:block mt-8 max-w-[45ch] text-foreground/70 text-lg md:text-xl leading-relaxed">
             Peças artesanais feitas à mão que unem estilo e autenticidade.
             Descubra roupas e acessórios que não apenas compõem, mas <b>definem</b> seu look.
           </p>
