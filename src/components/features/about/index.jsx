@@ -1,16 +1,23 @@
 "use client";
-import { Sparkles, HeartHandshake, Leaf, Rocket, Camera, ArrowRight } from "lucide-react";
+
+import {
+  Sparkles,
+  HeartHandshake,
+  Leaf,
+  Rocket,
+  Camera,
+  ArrowRight,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 const teamMembers = [
   {
     name: "Tamires",
     title: "Fundadora & CEO",
     bio: "Minha missão é transformar o crochê em peças modernas e cheias de personalidade.",
-    imageUrl: "/fundadora.jpeg",
+    imageUrl: "/about/ceo.jpeg",
   },
 ];
 
@@ -19,54 +26,72 @@ const Services4Content = () => {
     {
       icon: <Sparkles className="h-5 w-5" />,
       title: "Estilo e Tendência",
-      description: "Peças de crochê que são tendências de moda, elevando o estilo autêntico com itens exclusivos e aesthetic.",
-      items: ["Lançamento de Coleções", "Crochê Instagramável", "Peças Versáteis"],
+      description:
+        "Peças de crochê que unem moda contemporânea e autenticidade artesanal.",
+      items: [
+        "Lançamento de Coleções",
+        "Crochê Instagramável",
+        "Peças Versáteis",
+      ],
     },
     {
       icon: <HeartHandshake className="h-5 w-5" />,
-      title: "Conexão e Comunidade",
-      description: "Construir uma comunidade engajada, promovendo a valorização do feito à mão entre os jovens.",
+      title: "Comunidade",
+      description:
+        "Construção de uma comunidade forte, criativa e conectada ao feito à mão.",
       items: ["Interação nas Redes", "Experiência Personalizada"],
     },
     {
       icon: <Leaf className="h-5 w-5" />,
-      title: "Valorização do Artesanal",
-      description: "Destacar o processo artesanal, a sustentabilidade e a qualidade única do crochê para um consumo consciente.",
+      title: "Sustentabilidade",
+      description:
+        "Valorização do artesanal com foco em consumo consciente e durabilidade.",
       items: ["Materiais de Qualidade", "Peças Duráveis"],
     },
     {
       icon: <Rocket className="h-5 w-5" />,
-      title: "Crescimento de Marca",
-      description: "Expandir o alcance da marca no mercado, garantindo uma presença digital forte, autêntica e eficiente.",
+      title: "Crescimento",
+      description:
+        "Expansão da marca com presença digital forte e identidade autêntica.",
       items: [],
     },
   ];
 
   return (
-    <div className="space-y-8">
-      <h3 className="text-2xl font-bold tracking-tight border-b pb-4">
-        Nossos Objetivos
-      </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="space-y-10">
+      <div className="space-y-2">
+        <h3 className="text-2xl md:text-3xl font-black tracking-tight">
+         Objetivos
+        </h3>
+        <div className="h-px w-16 bg-primary/40" />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {services.map((service, index) => (
           <div
             key={index}
-            className="group border border-border p-6 rounded-2xl transition-all hover:bg-muted/10 space-y-4"
+            className="group relative rounded-2xl border bg-background/60 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/30"
           >
             <div className="flex items-center gap-4">
-              <div className="bg-primary/10 text-primary rounded-xl p-2.5 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <div className="rounded-xl bg-primary/10 p-3 text-primary transition-all group-hover:bg-primary group-hover:text-white">
                 {service.icon}
               </div>
-              <h4 className="text-lg font-bold leading-tight">{service.title}</h4>
+
+              <h4 className="text-lg font-bold">{service.title}</h4>
             </div>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+
+            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
               {service.description}
             </p>
+
             {service.items.length > 0 && (
-              <ul className="grid grid-cols-1 gap-2 pt-2">
+              <ul className="mt-5 space-y-2">
                 {service.items.map((item, itemIndex) => (
-                  <li key={itemIndex} className="flex items-center gap-2 text-[13px] font-medium text-muted-foreground/90">
-                    <div className="h-1 w-1 rounded-full bg-primary" />
+                  <li
+                    key={itemIndex}
+                    className="flex items-center gap-2 text-xs font-medium text-muted-foreground"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary/70" />
                     {item}
                   </li>
                 ))}
@@ -81,38 +106,37 @@ const Services4Content = () => {
 
 const TeamContent = () => {
   const member = teamMembers[0];
+
   return (
-    <div className="flex flex-col gap-8">
-      <div className="relative group w-full max-w-sm mx-auto lg:mx-0">
-        <div className="absolute -inset-3 border border-border rounded-[2rem] -z-10 transition-transform" />
-        <div className="aspect-[4/5] overflow-hidden rounded-[1.5rem] shadow-2xl">
+    <div className="flex flex-col gap-10">
+      <div className="relative group mx-auto lg:mx-0 w-full max-w-sm">
+        <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-primary/20 via-transparent to-pink-300/20 blur-2xl opacity-60" />
+
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] border shadow-2xl">
           <Image
             src={member.imageUrl}
             alt={member.name}
-            className="w-full h-full object-cover transition-transform duration-500 "
-            width={400}
-            height={500}
+            width={500}
+            height={650}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
       </div>
 
       <div className="space-y-4 text-center lg:text-left">
-        <div className="space-y-1">
-          <h3 className="text-4xl font-black tracking-tighter">{member.name}</h3>
-          <p className="text-primary font-bold uppercase tracking-widest text-sm italic">{member.title}</p>
-        </div>
-        <p className="text-lg text-muted-foreground font-light leading-relaxed">
-          "{member.bio}"
+        <h3 className="text-4xl md:text-5xl font-black tracking-tight">
+          {member.name}
+        </h3>
+
+        <p className="text-sm uppercase tracking-[0.3em] text-primary font-semibold">
+          {member.title}
         </p>
-        <div className="pt-4">
-          <Button variant="outline" className="rounded-full gap-2 group" asChild>
-            <Link href="https://instagram.com/tam.artsy" target="_blank">
-              <Camera className="size-4" />
-              Siga nossa jornada
-              <ArrowRight className="size-4 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
-            </Link>
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          className="mt-6 rounded-full gap-2 group"
+          asChild
+        >
+        </Button>
       </div>
     </div>
   );
@@ -120,22 +144,28 @@ const TeamContent = () => {
 
 const CEOAndObjectives = () => {
   return (
-    <section className="py-20 px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="flex flex-col items-center text-center mb-20 space-y-4">
-        <span className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[0.2em]">
+    <section className="relative py-24 px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-background to-muted/30" />
+
+      <div className="mb-20 text-center space-y-4">
+        <span className="inline-flex items-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-primary">
           Sobre a Tam Artsy
         </span>
-        <h2 className="text-5xl md:text-6xl font-black tracking-tighter max-w-2xl">
-          Conheça Sobre
+
+        <h2 className="text-4xl md:text-6xl font-black tracking-tight">
+          Conheça a marca
         </h2>
-        <p className="max-w-xl text-lg text-muted-foreground font-light leading-relaxed">
-          Nascido de um simples hobby, hoje eu amo fazer outras pessoas estilosas e autenticas.
+
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground font-light leading-relaxed">
+          Nascida de um hobby artesanal, hoje a Tam Artsy representa estilo, identidade e autenticidade.
         </p>
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 xl:gap-24">
-        <div className="lg:col-span-5 lg:sticky lg:top-12 h-fit">
+        <div className="lg:col-span-5 lg:sticky lg:top-16 h-fit">
           <TeamContent />
         </div>
+
         <div className="lg:col-span-7">
           <Services4Content />
         </div>

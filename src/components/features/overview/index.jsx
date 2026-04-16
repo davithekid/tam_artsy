@@ -31,16 +31,45 @@ const ProductOverview = ({ product }) => {
     };
 
     carouselApi.on("select", onSelect);
-
     return () => carouselApi.off("select", onSelect);
   }, [carouselApi, selectedImage]);
-  const priceValue = product.price?.sale ?? product.price?.regular ?? 0;
+
+  // preço seguro
+  const priceValue =
+    product?.price?.sale ??
+    product?.price?.regular ??
+    0;
+
+  // cores (compatível com seu model atual)
+  const colors =
+    product?.variants?.color ??
+    product?.colors ??
+    [];
+
+  // specs → detalhes técnicos formatados
+  const details = product?.specs
+    ? Object.entries(product.specs).map(([key, value]) => ({
+        label: formatLabel(key),
+        value,
+      }))
+    : [];
+
+  function formatLabel(key) {
+    const map = {
+      material: "Material",
+      tamanho: "Tamanho",
+      alca: "Altura da Alça",
+    };
+    return map[key] ?? key;
+  }
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
+
+        {/* IMAGENS */}
         <div className="flex flex-col gap-6">
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-zinc-50 border border-zinc-100 shadow-sm">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-zinc-50 border shadow-sm">
             {product.images?.length > 1 ? (
               <Carousel setApi={setCarouselApi}>
                 <CarouselContent>
@@ -63,6 +92,7 @@ const ProductOverview = ({ product }) => {
               />
             )}
           </div>
+
           {product.images?.length > 1 && (
             <div className="flex gap-4 overflow-x-auto pb-2">
               {product.images.map((img, index) => (
@@ -82,7 +112,10 @@ const ProductOverview = ({ product }) => {
             </div>
           )}
         </div>
+
+        {/* INFO */}
         <div className="flex flex-col gap-8">
+
           <div className="space-y-4">
             <h1 className="text-4xl font-black tracking-tighter lg:text-5xl">
               {product.title}
@@ -93,22 +126,23 @@ const ProductOverview = ({ product }) => {
             </p>
           </div>
 
+          {/* PREÇO */}
           <div className="flex items-baseline gap-4 rounded-3xl p-6 border bg-muted">
             <span className="text-sm text-muted-foreground">Valor</span>
-
             <div className="text-4xl font-black">
               R$ {priceValue.toFixed(2).replace(".", ",")}
             </div>
           </div>
 
-          {product.colors && (
+          {/* CORES */}
+          {colors.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-sm font-bold uppercase tracking-widest">
                 Cores Disponíveis
               </h3>
 
               <div className="flex flex-wrap gap-2">
-                {product.colors.map((color) => (
+                {colors.map((color) => (
                   <button
                     key={color}
                     className="rounded-full border px-4 py-1 text-sm hover:bg-black hover:text-white transition"
@@ -120,14 +154,16 @@ const ProductOverview = ({ product }) => {
             </div>
           )}
 
-          {product.details && (
+          {/* DETALHES TÉCNICOS */}
+          {details.length > 0 && (
             <div className="rounded-3xl border p-6 space-y-4">
               <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest">
-                <Ruler className="size-4" /> Detalhes
+                <Ruler className="size-4" />
+                Detalhes Técnicos
               </h3>
 
               <div className="grid grid-cols-2 gap-y-4 text-sm">
-                {product.details.map((item, i) => (
+                {details.map((item, i) => (
                   <div key={i} className="contents">
                     <div className="text-muted-foreground">
                       {item.label}
@@ -141,29 +177,28 @@ const ProductOverview = ({ product }) => {
             </div>
           )}
 
-          {product.features && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {product.features.map((feature, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-4 rounded-2xl p-4 border"
-                >
-                  <div className="rounded-full bg-white p-2 shadow-sm">
-                    {i === 0 ? (
-                      <Truck className="h-5 w-5" />
-                    ) : (
-                      <ShieldCheck className="h-5 w-5" />
-                    )}
-                  </div>
-
-                  <span className="text-xs font-bold uppercase">
-                    {feature}
-                  </span>
-                </div>
-              ))}
+          {/* FEATURES */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="flex items-center gap-4 rounded-2xl p-4 border">
+              <div className="rounded-full bg-white p-2 shadow-sm">
+                <Truck className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-bold uppercase">
+                Entrega combinada
+              </span>
             </div>
-          )}
 
+            <div className="flex items-center gap-4 rounded-2xl p-4 border">
+              <div className="rounded-full bg-white p-2 shadow-sm">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-bold uppercase">
+                Produto exclusivo
+              </span>
+            </div>
+          </div>
+
+          {/* CTA */}
           <Button
             asChild
             size="lg"
@@ -179,6 +214,7 @@ const ProductOverview = ({ product }) => {
               <ChevronRight className="size-5 opacity-50" />
             </Link>
           </Button>
+
         </div>
       </div>
     </section>
