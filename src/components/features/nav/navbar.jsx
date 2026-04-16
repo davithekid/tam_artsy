@@ -7,17 +7,18 @@ import { ButtonTheme } from "../theme/button-theme";
 
 const Navbar = () => {
   return (
-    <nav className="h-16 border-b bg-background">
-      <div className="relative mx-auto flex h-full max-w-(--breakpoint-lg) items-center px-4 sm:px-6 lg:px-8">
-
+    <nav className="sticky top-0 z-50 h-20 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-6 lg:px-8">
+        
         <div className="flex items-center">
-          <Logo />
+          <Logo className="transition-transform hover:scale-105" />
         </div>
 
-        <div className="absolute left-1/2 hidden -translate-x-1/2 md:block">
+        <div className="hidden md:block">
           <NavMenu />
         </div>
-        <div className="ml-auto flex items-center gap-3">
+
+        <div className="flex items-center gap-2 sm:gap-4">
           <ButtonTheme />
           <div className="md:hidden">
             <NavigationSheet />

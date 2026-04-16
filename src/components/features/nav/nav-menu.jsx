@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { products } from "@/config/navbar";
 
 export const NavMenu = (props) => (
-  <NavigationMenu {...props}>
+  <NavigationMenu {...props} className="relative z-50">
     <NavigationMenuList className="gap-1 text-sm">
 
       <NavigationMenuItem>
@@ -27,7 +27,9 @@ export const NavMenu = (props) => (
       <NavigationMenuItem>
         <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
 
-        <NavigationMenuContent>
+        <NavigationMenuContent
+          className="z-[100] relative bg-background border shadow-xl rounded-xl"
+        >
           <ul className="grid w-[400px] gap-3 p-3 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
 
             {products.map((item) => (
