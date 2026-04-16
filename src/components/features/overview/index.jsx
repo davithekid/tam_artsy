@@ -9,6 +9,7 @@ import {
   Camera,
   ChevronRight,
   Ruler,
+  Info,
 } from "lucide-react";
 import {
   Carousel,
@@ -21,59 +22,59 @@ const ProductOverview = ({ product }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [carouselApi, setCarouselApi] = useState();
 
+  // 1. PROTEÇÃO: Se o produto não existir, não quebra a página
+  if (!product) {
+    return (
+      <div className="flex h-96 items-center justify-center italic text-muted-foreground">
+        Carregando detalhes do produto...
+      </div>
+    );
+  }
+
   useEffect(() => {
-    if (!carouselApi) return;
-
+    if (!carouselApi || !product?.images) return;
     carouselApi.scrollTo(selectedImage);
-
-    const onSelect = () => {
-      setSelectedImage(carouselApi.selectedScrollSnap());
-    };
-
+    const onSelect = () => setSelectedImage(carouselApi.selectedScrollSnap());
     carouselApi.on("select", onSelect);
     return () => carouselApi.off("select", onSelect);
-  }, [carouselApi, selectedImage]);
+  }, [carouselApi, selectedImage, product]);
 
-  // preço seguro
-  const priceValue =
-    product?.price?.sale ??
-    product?.price?.regular ??
-    0;
+  // 2. EXTRAÇÃO SEGURA DOS DADOS
+  const priceValue = product.price?.sale ?? product.price?.regular ?? 0;
+  const colors = product.variants?.color ?? [];
+  const sizes = product.variants?.sizes ?? [];
+  const images = product.images ?? []; // Garante que images seja ao menos um array vazio
 
-  // cores (compatível com seu model atual)
-  const colors =
-    product?.variants?.color ??
-    product?.colors ??
-    [];
+  function formatLabel(key) {
+    const map = {
+      material: "Material",
+      tamanho: "Dimensões",
+      alca: "Altura da Alça",
+      tecnica: "Técnica",
+      estilo: "Estilo",
+    };
+    return map[key] ?? key;
+  }
 
-  // specs → detalhes técnicos formatados
-  const details = product?.specs
+  const details = product.specs
     ? Object.entries(product.specs).map(([key, value]) => ({
         label: formatLabel(key),
         value,
       }))
     : [];
 
-  function formatLabel(key) {
-    const map = {
-      material: "Material",
-      tamanho: "Tamanho",
-      alca: "Altura da Alça",
-    };
-    return map[key] ?? key;
-  }
-
   return (
     <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
-
-        {/* IMAGENS */}
+        
+        {/* COLUNA ESQUERDA: IMAGENS */}
         <div className="flex flex-col gap-6">
           <div className="relative overflow-hidden rounded-[2.5rem] bg-zinc-50 border shadow-sm">
-            {product.images?.length > 1 ? (
+            {/* Agora usamos a variável 'images' que garantimos ser um array */}
+            {images.length > 1 ? (
               <Carousel setApi={setCarouselApi}>
                 <CarouselContent>
-                  {product.images.map((img, index) => (
+                  {images.map((img, index) => (
                     <CarouselItem key={index}>
                       <img
                         src={img}
@@ -86,23 +87,23 @@ const ProductOverview = ({ product }) => {
               </Carousel>
             ) : (
               <img
-                src={product.images?.[0]}
+                src={images[0]} // Se não houver imagem, images[0] será undefined mas não quebrará o length
                 alt={product.title}
                 className="aspect-[4/5] w-full object-cover"
               />
             )}
           </div>
 
-          {product.images?.length > 1 && (
-            <div className="flex gap-4 overflow-x-auto pb-2">
-              {product.images.map((img, index) => (
+          {images.length > 1 && (
+            <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+              {images.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
                   className={cn(
-                    "h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border-2",
+                    "h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border-2 transition-all",
                     selectedImage === index
-                      ? "border-zinc-900"
+                      ? "border-zinc-900 scale-95"
                       : "border-transparent opacity-60 hover:opacity-100"
                   )}
                 >
@@ -113,96 +114,86 @@ const ProductOverview = ({ product }) => {
           )}
         </div>
 
-        {/* INFO */}
+        {/* COLUNA DIREITA: INFO */}
         <div className="flex flex-col gap-8">
-
           <div className="space-y-4">
-            <h1 className="text-4xl font-black tracking-tighter lg:text-5xl">
+            <h1 className="text-4xl font-black tracking-tighter lg:text-6xl italic">
               {product.title}
             </h1>
-
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-muted-foreground leading-relaxed">
               {product.description}
             </p>
           </div>
 
-          {/* PREÇO */}
-          <div className="flex items-baseline gap-4 rounded-3xl p-6 border bg-muted">
-            <span className="text-sm text-muted-foreground">Valor</span>
-            <div className="text-4xl font-black">
+          <div className="flex items-baseline gap-4 rounded-[2rem] p-6 border bg-secondary/20">
+            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Valor</span>
+            <div className="text-4xl font-black tracking-tighter">
               R$ {priceValue.toFixed(2).replace(".", ",")}
             </div>
           </div>
 
-          {/* CORES */}
-          {colors.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-widest">
-                Cores Disponíveis
-              </h3>
-
-              <div className="flex flex-wrap gap-2">
-                {colors.map((color) => (
-                  <button
-                    key={color}
-                    className="rounded-full border px-4 py-1 text-sm hover:bg-black hover:text-white transition"
-                  >
-                    {color}
-                  </button>
-                ))}
+          {/* VARIANTES */}
+          <div className="space-y-6">
+            {sizes.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                  Tamanhos Disponíveis
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {sizes.map((size) => (
+                    <div
+                      key={size}
+                      className="flex h-10 w-12 items-center justify-center rounded-xl border-2 border-zinc-200 font-bold text-sm"
+                    >
+                      {size}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* DETALHES TÉCNICOS */}
+            {colors.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                  Cores Disponíveis
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {colors.map((color) => (
+                    <span
+                      key={color}
+                      className="rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider bg-zinc-100"
+                    >
+                      {color}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* FICHA TÉCNICA */}
           {details.length > 0 && (
-            <div className="rounded-3xl border p-6 space-y-4">
-              <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest">
-                <Ruler className="size-4" />
-                Detalhes Técnicos
+            <div className="rounded-[2rem] border p-8 space-y-6 bg-white/50 backdrop-blur-sm">
+              <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em]">
+                <Info className="size-4" />
+                Ficha Técnica
               </h3>
-
-              <div className="grid grid-cols-2 gap-y-4 text-sm">
+              <div className="grid grid-cols-1 gap-y-4">
                 {details.map((item, i) => (
-                  <div key={i} className="contents">
-                    <div className="text-muted-foreground">
-                      {item.label}
-                    </div>
-                    <div className="text-right font-bold">
-                      {item.value}
-                    </div>
+                  <div key={i} className="flex justify-between border-b border-zinc-100 pb-2 text-sm">
+                    <span className="text-muted-foreground">{item.label}</span>
+                    <span className="font-bold">{item.value}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* FEATURES */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex items-center gap-4 rounded-2xl p-4 border">
-              <div className="rounded-full bg-white p-2 shadow-sm">
-                <Truck className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-bold uppercase">
-                Entrega combinada
-              </span>
-            </div>
-
-            <div className="flex items-center gap-4 rounded-2xl p-4 border">
-              <div className="rounded-full bg-white p-2 shadow-sm">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-bold uppercase">
-                Produto exclusivo
-              </span>
-            </div>
-          </div>
-
-          {/* CTA */}
+          {/* BOTÃO */}
           <Button
             asChild
             size="lg"
-            className="h-16 w-full rounded-2xl text-lg font-bold"
+            className="h-16 w-full rounded-2xl text-lg font-bold shadow-xl"
           >
             <Link
               href="https://www.instagram.com/tam.artsy/"
@@ -210,11 +201,10 @@ const ProductOverview = ({ product }) => {
               className="flex items-center justify-center gap-3"
             >
               <Camera className="size-6" />
-              Pedir pelo Instagram
+              Encomendar via Direct
               <ChevronRight className="size-5 opacity-50" />
             </Link>
           </Button>
-
         </div>
       </div>
     </section>
