@@ -1,11 +1,18 @@
 "use client";
 
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { Price, PriceValue } from "@/components/shadcnblocks/price";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
 import { products } from "@/lib/purges";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { Progress } from "@/components/ui/progress";
 
 const ALL_PRODUCTS = products.filter((p) => p.category === "bolsas");
 const FEATURED = ALL_PRODUCTS.slice(0, 3);
@@ -20,6 +27,35 @@ const FILTERS = [
 const Purge = ({ className }) => {
   const [activeFilter, setActiveFilter] = useState("todas");
   const [page, setPage] = useState(1);
+  
+  const [apiFeatured, setApiFeatured] = useState();
+  const [progressFeatured, setProgressFeatured] = useState(0);
+  const [apiCatalog, setApiCatalog] = useState();
+  const [progressCatalog, setProgressCatalog] = useState(0);
+
+  useEffect(() => {
+    if (!apiFeatured) return;
+    const update = () => {
+      const current = apiFeatured.selectedScrollSnap() + 1;
+      const total = apiFeatured.scrollSnapList().length;
+      setProgressFeatured((current / total) * 100);
+    };
+    update();
+    apiFeatured.on("select", update);
+    return () => apiFeatured.off("select", update);
+  }, [apiFeatured]);
+
+  useEffect(() => {
+    if (!apiCatalog) return;
+    const update = () => {
+      const current = apiCatalog.selectedScrollSnap() + 1;
+      const total = apiCatalog.scrollSnapList().length;
+      setProgressCatalog((current / total) * 100);
+    };
+    update();
+    apiCatalog.on("select", update);
+    return () => apiCatalog.off("select", update);
+  }, [apiCatalog, activeFilter]); 
 
   const filtered =
     activeFilter === "todas"
@@ -44,13 +80,27 @@ const Purge = ({ className }) => {
             </h2>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURED.map((item, i) => (
+          <div className="hidden sm:grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {FEATURED.map((item) => (
               <FeaturedCard key={item.id} {...item} />
             ))}
           </div>
-        </div>
 
+          <div className="sm:hidden space-y-8">
+            <Carousel setApi={setApiFeatured} className="w-full">
+              <CarouselContent>
+                {FEATURED.map((item) => (
+                  <CarouselItem key={item.id} className="basis-[90%] pl-4">
+                    <FeaturedCard {...item} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+            <div className="flex justify-center px-12">
+              <Progress value={progressFeatured} className="h-1 w-full bg-secondary" />
+            </div>
+          </div>
+        </div>
         <div className="pt-16 border-t border-border/40">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
             <div className="space-y-2">
@@ -68,8 +118,8 @@ const Purge = ({ className }) => {
                   className={cn(
                     "px-6 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300",
                     activeFilter === f.value
-                      ? "bg-background text-foreground shadow-sm scale-100"
-                      : "text-muted-foreground hover:text-foreground hover:bg-background/50 scale-95"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {f.label}
@@ -78,47 +128,51 @@ const Purge = ({ className }) => {
             </div>
           </div>
 
-          {paginated.length === 0 ? (
+          {filtered.length === 0 ? (
             <div className="py-20 text-center border rounded-3xl border-dashed">
-              <p className="text-muted-foreground italic">Nenhuma peça encontrada nesta categoria.</p>
+              <p className="text-muted-foreground italic">Nenhuma peça encontrada.</p>
             </div>
           ) : (
-            <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {paginated.map((item) => (
-                <ProductCard key={item.id} {...item} />
-              ))}
-            </div>
-          )}
-
-          {totalPages > 1 && (
-            <div className="mt-20 flex items-center justify-center gap-4">
-              <button
-                disabled={page === 1}
-                onClick={() => setPage((p) => p - 1)}
-                className="p-2 disabled:opacity-20 transition-all hover:translate-x-[-4px]"
-              >
-                ←
-              </button>
-              <div className="flex gap-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                  <button
-                    key={n}
-                    onClick={() => setPage(n)}
-                    className={cn(
-                      "w-2 h-2 rounded-full transition-all duration-500",
-                      n === page ? "w-8 bg-primary" : "bg-muted-foreground/30 hover:bg-muted-foreground"
-                    )}
-                  />
-                ))}
+            <>
+              <div className="hidden sm:block space-y-12">
+                <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {paginated.map((item) => (
+                    <ProductCard key={item.id} {...item} />
+                  ))}
+                </div>
+                
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-4">
+                    <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="p-2 disabled:opacity-20">←</button>
+                    <div className="flex gap-2">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => setPage(n)}
+                          className={cn("w-2 h-2 rounded-full transition-all duration-500", n === page ? "w-8 bg-primary" : "bg-muted-foreground/30")}
+                        />
+                      ))}
+                    </div>
+                    <button disabled={page === totalPages} onClick={() => setPage((p) => p + 1)} className="p-2 disabled:opacity-20">→</button>
+                  </div>
+                )}
               </div>
-              <button
-                disabled={page === totalPages}
-                onClick={() => setPage((p) => p + 1)}
-                className="p-2 disabled:opacity-20 transition-all hover:translate-x-[4px]"
-              >
-                →
-              </button>
-            </div>
+
+              <div className="sm:hidden space-y-8">
+                <Carousel setApi={setApiCatalog} className="w-full">
+                  <CarouselContent>
+                    {filtered.map((item) => (
+                      <CarouselItem key={item.id} className="basis-[85%] pl-4">
+                        <ProductCard {...item} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+                <div className="flex justify-center px-12">
+                  <Progress value={progressCatalog} className="h-1 w-full bg-secondary" />
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -128,29 +182,17 @@ const Purge = ({ className }) => {
 
 const FeaturedCard = ({ title, description, slug, images, price, tags }) => {
   const { regular, sale, currency } = price;
-
   return (
     <Link href={`/bolsas/${slug}`} className="group block space-y-4">
       <div className="relative overflow-hidden rounded-[2rem] bg-secondary/10">
         <AspectRatio ratio={0.85}>
-          <img
-            src={images[0]}
-            alt={title}
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <img src={images[0]} alt={title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
         </AspectRatio>
-        
-        {tags?.[0] && (
-          <span className="absolute top-6 left-6 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full bg-background/90 backdrop-blur shadow-sm">
-            {tags[0]}
-          </span>
-        )}
+        {tags?.[0] && <span className="absolute top-6 left-6 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full bg-background/90 backdrop-blur shadow-sm">{tags[0]}</span>}
       </div>
-
       <div className="px-2">
-        <h3 className="text-xl font-bold tracking-tight group-hover:underline decoration-1 underline-offset-4">{title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{description}</p>
+        <h3 className="text-xl font-bold tracking-tight italic group-hover:underline">{title}</h3>
+        <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
         <div className="pt-2">
           <Price onSale={sale != null} className="gap-3">
             <PriceValue price={sale} currency={currency} variant="sale" className="text-lg font-bold" />
@@ -164,19 +206,13 @@ const FeaturedCard = ({ title, description, slug, images, price, tags }) => {
 
 const ProductCard = ({ title, slug, images, price }) => {
   const { regular, sale, currency } = price;
-
   return (
     <Link href={`/bolsas/${slug}`} className="group block space-y-3">
       <div className="relative overflow-hidden rounded-2xl bg-secondary/10">
         <AspectRatio ratio={1}>
-          <img
-            src={images[0]}
-            alt={title}
-            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-          />
+          <img src={images[0]} alt={title} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" />
         </AspectRatio>
       </div>
-
       <div className="space-y-1">
         <h4 className="font-bold text-sm tracking-tight uppercase">{title}</h4>
         <Price onSale={sale != null} className="gap-2">

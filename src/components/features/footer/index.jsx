@@ -116,9 +116,12 @@ const Footer = ({ className }) => {
             <p>© 2026 Tam Artsy </p>
 
             <p className="text-zinc-700 hover:text-zinc-400 transition">
-              Desenvolvido com atenção aos detalhes
+              Desenvolvido com Shadcn
             </p>
           </div>
+          <p className="text-zinc-700 hover:text-zinc-400 transition">
+            Algumas ilustrações foram aprimoradas com o auxílio da IA Gemini para melhorar a qualidade visual.
+          </p>
         </div>
       </div>
     </footer>

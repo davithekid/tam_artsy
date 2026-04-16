@@ -55,13 +55,13 @@ export const NavigationSheet = () => {
 
           <div>
 
-            <Link className="inline-block font-medium" href="/">
+            <Link className="inline-block font-medium" href="/sobre">
               Sobre
             </Link>
           </div>
 
           <div>
-            <Link className="inline-block font-medium" href="/">
+            <Link className="inline-block font-medium" href="/contato">
               Contato
             </Link>
           </div>

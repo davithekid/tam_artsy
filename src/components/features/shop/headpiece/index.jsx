@@ -1,11 +1,18 @@
 "use client";
 
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { Price, PriceValue } from "@/components/shadcnblocks/price";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
-import { headpieces } from "@/lib/headpieces"; // Importando dados corretos
+import { headpieces } from "@/lib/headpieces";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { Progress } from "@/components/ui/progress";
 
 const ALL_HEAD = headpieces.filter((p) => p.category === "headpieces" || p.category === "mais vendidos");
 const FEATURED_HEAD = ALL_HEAD.filter(p => p.featured).slice(0, 3);
@@ -20,6 +27,34 @@ const FILTERS = [
 const HeadpieceShop = ({ className }) => {
   const [activeFilter, setActiveFilter] = useState("todas");
   const [page, setPage] = useState(1);
+  const [apiFeatured, setApiFeatured] = useState();
+  const [progressFeatured, setProgressFeatured] = useState(0);
+  const [apiCatalog, setApiCatalog] = useState();
+  const [progressCatalog, setProgressCatalog] = useState(0);
+
+  useEffect(() => {
+    if (!apiFeatured) return;
+    const update = () => {
+      const current = apiFeatured.selectedScrollSnap() + 1;
+      const total = apiFeatured.scrollSnapList().length;
+      setProgressFeatured((current / total) * 100);
+    };
+    update();
+    apiFeatured.on("select", update);
+    return () => apiFeatured.off("select", update);
+  }, [apiFeatured]);
+
+  useEffect(() => {
+    if (!apiCatalog) return;
+    const update = () => {
+      const current = apiCatalog.selectedScrollSnap() + 1;
+      const total = apiCatalog.scrollSnapList().length;
+      setProgressCatalog((current / total) * 100);
+    };
+    update();
+    apiCatalog.on("select", update);
+    return () => apiCatalog.off("select", update);
+  }, [apiCatalog, activeFilter]);
 
   const filtered = activeFilter === "todas"
     ? ALL_HEAD
@@ -37,7 +72,6 @@ const HeadpieceShop = ({ className }) => {
     <section className={cn("py-24 bg-background", className)}>
       <div className="mx-auto max-w-7xl px-6 space-y-24">
         
-        {/* ── DESTAQUES ── */}
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex flex-col items-center text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic leading-none">
@@ -45,14 +79,27 @@ const HeadpieceShop = ({ className }) => {
             </h2>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 justify-center">
+          <div className="hidden sm:grid gap-8 sm:grid-cols-2 lg:grid-cols-3 justify-center">
             {FEATURED_HEAD.map((item) => (
               <HeadFeaturedCard key={item.id} {...item} />
             ))}
           </div>
-        </div>
 
-        {/* ── CATÁLOGO ── */}
+          <div className="sm:hidden space-y-8">
+            <Carousel setApi={setApiFeatured} className="w-full">
+              <CarouselContent>
+                {FEATURED_HEAD.map((item) => (
+                  <CarouselItem key={item.id} className="basis-[90%] pl-4">
+                    <HeadFeaturedCard {...item} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+            <div className="flex justify-center px-12">
+              <Progress value={progressFeatured} className="h-1 w-full bg-secondary" />
+            </div>
+          </div>
+        </div>
         <div className="pt-16 border-t border-border/40">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
             <div className="space-y-2">
@@ -80,24 +127,60 @@ const HeadpieceShop = ({ className }) => {
             </div>
           </div>
 
-          {paginated.length === 0 ? (
+          {filtered.length === 0 ? (
             <div className="py-20 text-center border rounded-3xl border-dashed">
               <p className="text-muted-foreground italic">Nenhuma peça encontrada.</p>
             </div>
           ) : (
-            <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {paginated.map((item) => (
-                <HeadProductCard key={item.id} {...item} />
-              ))}
-            </div>
+            <>
+              <div className="hidden sm:block space-y-12">
+                <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {paginated.map((item) => (
+                    <HeadProductCard key={item.id} {...item} />
+                  ))}
+                </div>
+                
+                {totalPages > 1 && (
+                  <div className="mt-20 flex items-center justify-center gap-4">
+                    <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="p-2 disabled:opacity-20">←</button>
+                    <div className="flex gap-2">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => setPage(n)}
+                          className={cn(
+                            "w-2 h-2 rounded-full transition-all duration-500",
+                            n === page ? "w-8 bg-primary" : "bg-muted-foreground/30"
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <button disabled={page === totalPages} onClick={() => setPage((p) => p + 1)} className="p-2 disabled:opacity-20">→</button>
+                  </div>
+                )}
+              </div>
+
+              <div className="sm:hidden space-y-8">
+                <Carousel setApi={setApiCatalog} className="w-full">
+                  <CarouselContent>
+                    {filtered.map((item) => (
+                      <CarouselItem key={item.id} className="basis-[85%] pl-4">
+                        <HeadProductCard {...item} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+                <div className="flex justify-center px-12">
+                  <Progress value={progressCatalog} className="h-1 w-full bg-secondary" />
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
     </section>
   );
 };
-
-// ── CARD DE DESTAQUE ──
 const HeadFeaturedCard = ({ title, description, slug, images, price, tags }) => {
   const regular = price?.regular ?? 0;
   const sale = price?.sale ?? null;
@@ -137,7 +220,6 @@ const HeadFeaturedCard = ({ title, description, slug, images, price, tags }) => 
   );
 };
 
-// ── CARD DO CATÁLOGO ──
 const HeadProductCard = ({ title, slug, images, price }) => {
   return (
     <Link href={`/headpieces/${slug}`} className="group block space-y-3">

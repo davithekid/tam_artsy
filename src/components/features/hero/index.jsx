@@ -53,7 +53,7 @@ export default function Hero() {
           <div className="absolute inset-0 bg-primary/5 blur-[120px] rounded-full scale-150" />
 
           <div className="relative animate-in fade-in zoom-in duration-1000">
-            <div className="scale-150 md:scale-[2] transition-transform duration-500 ease-out">
+            <div className="scale-100 md:scale-150 md:scale-[2] transition-transform duration-500 ease-out">
               <MiniLogo />
             </div>
           </div>

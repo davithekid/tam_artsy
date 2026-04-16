@@ -1,11 +1,18 @@
 "use client";
 
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { Price, PriceValue } from "@/components/shadcnblocks/price";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
-import { unissexs } from "@/lib/unissex"; // Importando dados unissex
+import { unissexs } from "@/lib/unissex";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { Progress } from "@/components/ui/progress";
 
 const ALL_UNISSEX = unissexs;
 const FEATURED_UNISSEX = ALL_UNISSEX.filter(p => p.featured).slice(0, 3);
@@ -20,6 +27,33 @@ const FILTERS = [
 const UnissexShop = ({ className }) => {
   const [activeFilter, setActiveFilter] = useState("todas");
   const [page, setPage] = useState(1);
+  const [apiFeatured, setApiFeatured] = useState();
+  const [progressFeatured, setProgressFeatured] = useState(0);
+  const [apiCatalog, setApiCatalog] = useState();
+  const [progressCatalog, setProgressCatalog] = useState(0);
+  useEffect(() => {
+    if (!apiFeatured) return;
+    const update = () => {
+      const current = apiFeatured.selectedScrollSnap() + 1;
+      const total = apiFeatured.scrollSnapList().length;
+      setProgressFeatured((current / total) * 100);
+    };
+    update();
+    apiFeatured.on("select", update);
+    return () => apiFeatured.off("select", update);
+  }, [apiFeatured]);
+
+  useEffect(() => {
+    if (!apiCatalog) return;
+    const update = () => {
+      const current = apiCatalog.selectedScrollSnap() + 1;
+      const total = apiCatalog.scrollSnapList().length;
+      setProgressCatalog((current / total) * 100);
+    };
+    update();
+    apiCatalog.on("select", update);
+    return () => apiCatalog.off("select", update);
+  }, [apiCatalog, activeFilter]);
 
   const filtered = activeFilter === "todas"
     ? ALL_UNISSEX
@@ -43,14 +77,28 @@ const UnissexShop = ({ className }) => {
             </h2>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 justify-center">
+          <div className="hidden sm:grid gap-8 sm:grid-cols-2 lg:grid-cols-3 justify-center">
             {FEATURED_UNISSEX.map((item) => (
               <UnissexCard key={item.id} item={item} isFeatured />
             ))}
           </div>
+
+          <div className="sm:hidden space-y-8">
+            <Carousel setApi={setApiFeatured} className="w-full">
+              <CarouselContent>
+                {FEATURED_UNISSEX.map((item) => (
+                  <CarouselItem key={item.id} className="basis-[90%] pl-4">
+                    <UnissexCard item={item} isFeatured />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+            <div className="flex justify-center px-12">
+              <Progress value={progressFeatured} className="h-1 w-full bg-secondary" />
+            </div>
+          </div>
         </div>
 
-        {/* ── CATÁLOGO ── */}
         <div className="pt-16 border-t border-border/40">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
             <div className="space-y-2">
@@ -78,16 +126,54 @@ const UnissexShop = ({ className }) => {
             </div>
           </div>
 
-          {paginated.length === 0 ? (
+          {filtered.length === 0 ? (
             <div className="py-20 text-center border rounded-3xl border-dashed">
               <p className="text-muted-foreground italic">Nenhuma peça encontrada.</p>
             </div>
           ) : (
-            <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {paginated.map((item) => (
-                <UnissexCard key={item.id} item={item} />
-              ))}
-            </div>
+            <>
+              <div className="hidden sm:block space-y-12">
+                <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {paginated.map((item) => (
+                    <UnissexCard key={item.id} item={item} />
+                  ))}
+                </div>
+                
+                {totalPages > 1 && (
+                  <div className="mt-20 flex items-center justify-center gap-4">
+                    <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="p-2 disabled:opacity-20">←</button>
+                    <div className="flex gap-2">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => setPage(n)}
+                          className={cn(
+                            "w-2 h-2 rounded-full transition-all duration-500",
+                            n === page ? "w-8 bg-primary" : "bg-muted-foreground/30"
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <button disabled={page === totalPages} onClick={() => setPage((p) => p + 1)} className="p-2 disabled:opacity-20">→</button>
+                  </div>
+                )}
+              </div>
+
+              <div className="sm:hidden space-y-8">
+                <Carousel setApi={setApiCatalog} className="w-full">
+                  <CarouselContent>
+                    {filtered.map((item) => (
+                      <CarouselItem key={item.id} className="basis-[85%] pl-4">
+                        <UnissexCard item={item} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+                <div className="flex justify-center px-12">
+                  <Progress value={progressCatalog} className="h-1 w-full bg-secondary" />
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -95,7 +181,6 @@ const UnissexShop = ({ className }) => {
   );
 };
 
-// ── CARD UNIFICADO (Se adapta se for destaque ou não) ──
 const UnissexCard = ({ item, isFeatured = false }) => {
   const { title, slug, images, price, tags, description } = item;
   const regular = price?.regular ?? 0;
