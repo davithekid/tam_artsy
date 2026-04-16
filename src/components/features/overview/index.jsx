@@ -4,11 +4,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
-  Truck,
-  ShieldCheck,
   Camera,
   ChevronRight,
-  Ruler,
   Info,
 } from "lucide-react";
 import {
@@ -38,11 +35,10 @@ const ProductOverview = ({ product }) => {
     return () => carouselApi.off("select", onSelect);
   }, [carouselApi, selectedImage, product]);
 
-  // 2. EXTRAÇÃO SEGURA DOS DADOS
   const priceValue = product.price?.sale ?? product.price?.regular ?? 0;
   const colors = product.variants?.color ?? [];
   const sizes = product.variants?.sizes ?? [];
-  const images = product.images ?? []; // Garante que images seja ao menos um array vazio
+  const images = product.images ?? [];
 
   function formatLabel(key) {
     const map = {
@@ -63,13 +59,10 @@ const ProductOverview = ({ product }) => {
     : [];
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
-        
-        {/* COLUNA ESQUERDA: IMAGENS */}
-        <div className="flex flex-col gap-6">
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-zinc-50 border shadow-sm">
-            {/* Agora usamos a variável 'images' que garantimos ser um array */}
+    <section className="mx-auto max-w-7xl px-4 sm:px-6 py-10 lg:px-8">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
+        <div className="flex flex-col gap-4">
+          <div className="relative overflow-hidden rounded-3xl border bg-muted/30">
             {images.length > 1 ? (
               <Carousel setApi={setCarouselApi}>
                 <CarouselContent>
@@ -86,7 +79,7 @@ const ProductOverview = ({ product }) => {
               </Carousel>
             ) : (
               <img
-                src={images[0]} // Se não houver imagem, images[0] será undefined mas não quebrará o length
+                src={images[0]}
                 alt={product.title}
                 className="aspect-[4/5] w-full object-cover"
               />
@@ -94,16 +87,16 @@ const ProductOverview = ({ product }) => {
           </div>
 
           {images.length > 1 && (
-            <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+            <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
               {images.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
                   className={cn(
-                    "h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border-2 transition-all",
+                    "h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border transition-all",
                     selectedImage === index
-                      ? "border-zinc-900 scale-95"
-                      : "border-transparent opacity-60 hover:opacity-100"
+                      ? "border-primary ring-2 ring-primary/30"
+                      : "border-border opacity-60 hover:opacity-100"
                   )}
                 >
                   <img src={img} className="h-full w-full object-cover" />
@@ -113,36 +106,37 @@ const ProductOverview = ({ product }) => {
           )}
         </div>
 
-        {/* COLUNA DIREITA: INFO */}
         <div className="flex flex-col gap-8">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-black tracking-tighter lg:text-6xl italic">
+          
+          <div className="space-y-3">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight">
               {product.title}
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
               {product.description}
             </p>
           </div>
 
-          <div className="flex items-baseline gap-4 rounded-[2rem] p-6 border bg-secondary/20">
-            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Valor</span>
-            <div className="text-4xl font-black tracking-tighter">
+          <div className="flex items-baseline gap-4 rounded-2xl p-5 border bg-muted/40">
+            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Valor
+            </span>
+            <div className="text-3xl sm:text-4xl font-black">
               R$ {priceValue.toFixed(2).replace(".", ",")}
             </div>
           </div>
 
-          {/* VARIANTES */}
           <div className="space-y-6">
             {sizes.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              <div className="space-y-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Tamanhos Disponíveis
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {sizes.map((size) => (
                     <div
                       key={size}
-                      className="flex h-10 w-12 items-center justify-center rounded-xl border-2 border-zinc-200 font-bold text-sm"
+                      className="flex h-10 w-12 items-center justify-center rounded-lg border border-border bg-background text-sm font-semibold"
                     >
                       {size}
                     </div>
@@ -152,15 +146,15 @@ const ProductOverview = ({ product }) => {
             )}
 
             {colors.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              <div className="space-y-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Cores Disponíveis
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {colors.map((color) => (
                     <span
                       key={color}
-                      className="rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider bg-zinc-100"
+                      className="rounded-full border border-border px-3 py-1 text-xs font-semibold bg-muted"
                     >
                       {color}
                     </span>
@@ -170,40 +164,47 @@ const ProductOverview = ({ product }) => {
             )}
           </div>
 
-          {/* FICHA TÉCNICA */}
           {details.length > 0 && (
-            <div className="rounded-[2rem] border p-8 space-y-6 bg-white/50 backdrop-blur-sm">
-              <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em]">
+            <div className="rounded-2xl border bg-muted/30 p-6 space-y-4">
+              <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
                 <Info className="size-4" />
                 Ficha Técnica
               </h3>
-              <div className="grid grid-cols-1 gap-y-4">
+
+              <div className="space-y-3">
                 {details.map((item, i) => (
-                  <div key={i} className="flex justify-between border-b border-zinc-100 pb-2 text-sm">
-                    <span className="text-muted-foreground">{item.label}</span>
-                    <span className="font-bold">{item.value}</span>
+                  <div
+                    key={i}
+                    className="flex justify-between border-b border-border pb-2 text-sm"
+                  >
+                    <span className="text-muted-foreground">
+                      {item.label}
+                    </span>
+                    <span className="font-semibold">
+                      {item.value}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* BOTÃO */}
           <Button
             asChild
             size="lg"
-            className="h-16 w-full rounded-2xl text-lg font-bold shadow-xl"
+            className="h-14 w-full rounded-xl text-base font-semibold"
           >
             <Link
               href="https://www.instagram.com/tam.artsy/"
               target="_blank"
-              className="flex items-center justify-center gap-3"
+              className="flex items-center justify-center gap-2"
             >
-              <Camera className="size-6" />
+              <Camera className="size-5" />
               Encomendar via Direct
-              <ChevronRight className="size-5 opacity-50" />
+              <ChevronRight className="size-4 opacity-70" />
             </Link>
           </Button>
+
         </div>
       </div>
     </section>
