@@ -8,14 +8,6 @@ import Image from "next/image";
 const features = [
   {
     category: "Eventos",
-    title: "Carnaval",
-    details:
-      "Peças vibrantes e cheias de personalidade para você brilhar nos blocos e festas.",
-    tutorialLink: "#",
-   image: "/features/copa-do-mundo.jpeg",
-  },
-  {
-    category: "Eventos",
     title: "Dia dos Namorados",
     details:
       "Looks delicados e românticos perfeitos para momentos especiais a dois.",

@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/features/theme/theme-provider";
 import Navbar from "@/components/features/nav/navbar";
 import { Footer } from "@/components/features/footer";
+import GlobalLayout from "@/components/splash-creen/GlobalLayout";
 
 
 const geistSans = Geist({
@@ -33,7 +34,9 @@ export default function RootLayout({ children }) {
             disableTransitionOnChange
           >
             <Navbar/>
+            <GlobalLayout>
             {children}
+          </GlobalLayout>
             <Footer/>
           </ThemeProvider>
         </body>
