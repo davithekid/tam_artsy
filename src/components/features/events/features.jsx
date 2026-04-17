@@ -11,16 +11,16 @@ const features = [
     title: "Dia dos Namorados",
     details:
       "Looks delicados e românticos perfeitos para momentos especiais a dois.",
-    tutorialLink: "#",
-    image: "/features/copa-do-mundo.jpeg",
+    tutorialLink: "/eventos/namorados",
+    image: "/events/valentine.webp",
   },
   {
     category: "Eventos",
     title: "Copa do Mundo",
     details:
       "Estilo e conforto para torcer com autenticidade em todos os jogos.",
-    tutorialLink: "#",
-    image: "/features/copa-do-mundo.jpeg",
+    tutorialLink: "/eventos/copa",
+    image: "/events/world-cup.jpeg",
   },
 ];
 
@@ -28,8 +28,6 @@ const Features = () => {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-[1100px] px-6 py-10">
-
-        {/* Título */}
         <h2 className="text-pretty text-center font-bold text-4xl tracking-tight md:text-[2.75rem]">
           Coleções Tam Artsy
         </h2>
@@ -37,8 +35,6 @@ const Features = () => {
         <p className="mt-3 text-center text-lg text-muted-foreground md:text-xl">
           Coleções pensadas para cada momento especial.
         </p>
-
-        {/* Lista */}
         <div className="mx-auto mt-12 w-full space-y-20">
 
           {features.map((feature, index) => (
@@ -46,9 +42,7 @@ const Features = () => {
               key={feature.title}
               className="flex flex-col items-center gap-x-12 gap-y-6 md:flex-row md:even:flex-row-reverse"
             >
-              
-              {/* IMAGEM */}
-              <div className="relative aspect-[14/9] w-full flex-1 basis-1/2 overflow-hidden rounded-xl border border-border/50">
+              <div className="relative aspect-[24/12] w-full flex-1 basis-1/2 overflow-hidden rounded-xl border border-border/50">
                 <Image
                   src={feature.image}
                   alt={feature.title}

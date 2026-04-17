@@ -90,7 +90,6 @@ const IndustriesResponsive = ({ industries, industryLabel }) => (
 
 const Industries1 = ({
   title = 'Categorias',
-  industryLabel = 'Coleção',
   industries = [
     {
       name: 'Bolsas',
@@ -146,7 +145,6 @@ const Industries1 = ({
 
         <IndustriesResponsive
           industries={industries}
-          industryLabel={industryLabel}
         />
 
         <div className="flex justify-center pt-8">

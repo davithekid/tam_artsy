@@ -1,7 +1,7 @@
 export const products = [
   {
     id: 1,
-    slug: "bolsa", 
+    slug: "bolsa",
     category: "bolsas",
     title: "Bolsa Eclipse Lunar",
     description: "Bolsa artesanal exclusiva com alça dupla regulável.",
@@ -9,8 +9,8 @@ export const products = [
       "/purges/bolsa.jpeg",
     ],
     price: {
-      regular: 499,
-      sale: 399,
+      regular: 85,
+      sale: null,
       currency: "BRL",
     },
     tags: ["duo", "mais-vendida"],
@@ -25,7 +25,7 @@ export const products = [
   },
   {
     id: 2,
-    slug: "bolsa-duo", 
+    slug: "bolsa-duo",
     category: "bolsas",
     title: "Bolsa Duo",
     description: "Bolsa artesanal exclusiva com alça dupla regulável.",
@@ -34,8 +34,8 @@ export const products = [
       "/purges/bolsa-duo.jpeg",
     ],
     price: {
-      regular: 499,
-      sale: 399,
+      regular: 75,
+      sale: null,
       currency: "BRL",
     },
     tags: ["duo", "mais-vendida"],
@@ -50,7 +50,7 @@ export const products = [
   },
   {
     id: 3,
-    slug: "bolsa-praia", 
+    slug: "bolsa-praia",
     category: "bolsas",
     title: "Bolsa Praia",
     description: "Bolsa artesanal exclusiva com alça dupla regulável.",
@@ -58,8 +58,8 @@ export const products = [
       "/purges/bolsa-praia.jpeg",
     ],
     price: {
-      regular: 499,
-      sale: 399,
+      regular: 85,
+      sale: null,
       currency: "BRL",
     },
     tags: ["duo", "mais-vendida"],
@@ -74,7 +74,7 @@ export const products = [
   },
   {
     id: 4,
-    slug: "bolsa-preta", 
+    slug: "bolsa-preta",
     category: "bolsas",
     title: "Bolsa Preta",
     description: "Bolsa artesanal exclusiva com alça dupla regulável.",
@@ -82,8 +82,8 @@ export const products = [
       "/purges/bolsa-preta.jpeg",
     ],
     price: {
-      regular: 499,
-      sale: 399,
+      regular: 85,
+      sale: null,
       currency: "BRL",
     },
     tags: ["duo", "mais-vendida"],

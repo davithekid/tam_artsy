@@ -36,7 +36,7 @@ const ProductOverview = ({ product }) => {
   }, [carouselApi, selectedImage, product]);
 
   const priceValue = product.price?.sale ?? product.price?.regular ?? 0;
-  const colors = product.variants?.color ?? [];
+  const colors = product.variants?.colors ?? [];
   const sizes = product.variants?.sizes ?? [];
   const images = product.images ?? [];
 
@@ -44,6 +44,7 @@ const ProductOverview = ({ product }) => {
     const map = {
       material: "Material",
       tamanho: "Dimensões",
+      color: "Cor",
       alca: "Altura da Alça",
       tecnica: "Técnica",
       estilo: "Estilo",
@@ -53,9 +54,9 @@ const ProductOverview = ({ product }) => {
 
   const details = product.specs
     ? Object.entries(product.specs).map(([key, value]) => ({
-        label: formatLabel(key),
-        value,
-      }))
+      label: formatLabel(key),
+      value,
+    }))
     : [];
 
   return (
@@ -107,7 +108,7 @@ const ProductOverview = ({ product }) => {
         </div>
 
         <div className="flex flex-col gap-8">
-          
+
           <div className="space-y-3">
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight">
               {product.title}
