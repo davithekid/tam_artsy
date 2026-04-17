@@ -147,7 +147,7 @@ const Industries1 = ({
           industries={industries}
         />
 
-        <div className="flex justify-center pt-8">
+        {/* <div className="flex justify-center pt-8">
           <Button
             size="lg"
             variant="outline"
@@ -156,7 +156,7 @@ const Industries1 = ({
           >
             <Link href="/produtos">Ver Catálogo Completo</Link>
           </Button>
-        </div>
+        </div> */}
 
       </div>
     </section>
